@@ -21,7 +21,7 @@ Muthu AI is a lightweight [Streamlit](https://streamlit.io) chat app that connec
 ## 🖥️ Demo Preview
 
 ```
-🐆 Muthu AI
+ Muthu AI
 Your personal AI assistant, now in the browser.
 
 > Summarize the attached document
@@ -137,4 +137,4 @@ Distributed under the **MIT License**. See [`LICENSE`](./LICENSE) for details.
 
 ---
 
-<p align="center">Built with 🐆 for anyone who wants a chat assistant that works — online or off.</p>
+<p align="center">Built with LLM for anyone who wants a chat assistant that works — online or off.</p>
