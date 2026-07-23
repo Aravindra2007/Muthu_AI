@@ -10,18 +10,125 @@ Run with:
 import os
 import streamlit as st
 from llm_client import ask, LLMError
+import base64
+from datetime import datetime
 
 # ---------------------------------------------------------------------
 # Page setup
 # ---------------------------------------------------------------------
 st.set_page_config(
-    page_title="Jaguar AI",
+    page_title="Muthu AI",
     page_icon="🐆",
     layout="centered",
 )
 
+# ---------------------------------------------------------------------
+# BACKGROUND + UI DESIGN
+# ---------------------------------------------------------------------
+def set_bg(image_file):
+    with open(image_file, "rb") as f:
+        data = base64.b64encode(f.read()).decode()
+
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
+                              url("data:image/jpg;base64,{data}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }}
+
+        /* Hide default UI */
+        #MainMenu {{visibility: hidden;}}
+        footer {{visibility: hidden;}}
+        header {{visibility: hidden;}}
+
+        /* Glass effect container */
+        .block-container {{
+            backdrop-filter: blur(10px);
+        }}
+
+        /* Chat bubbles */
+        .stChatMessage {{
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 10px rgba(0,255,255,0.2);
+        }}
+
+        /* Input box */
+        .stChatInput > div {{
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+        }}
+
+        /* Title glow */
+        h1 {{
+            text-align: center;
+            color: #00FFFF;
+            text-shadow: 0 0 20px #00FFFF;
+        }}
+
+        /* Typing cursor animation */
+        .typing {{
+            border-right: 2px solid #00FFFF;
+            animation: blink 1s infinite;
+        }}
+
+        @keyframes blink {{
+            0% {{ border-color: transparent; }}
+            50% {{ border-color: #00FFFF; }}
+            100% {{ border-color: transparent; }}
+        }}
+
+        /* Mic pulse animation */
+        .mic {{
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(0,255,255,0.2);
+            margin: 10px auto;
+            animation: pulse 1.5s infinite;
+        }}
+
+        @keyframes pulse {{
+            0% {{ transform: scale(1); opacity: 0.7; }}
+            50% {{ transform: scale(1.2); opacity: 1; }}
+            100% {{ transform: scale(1); opacity: 0.7; }}
+        }}
+
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+# 👉 your JPG file
+set_bg("back.jpg")
+
+def get_base64(img_path):
+    with open(img_path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+img_base64 = get_base64("logo.jpg")
+
+st.sidebar.markdown(
+    f"""
+    <div style="text-align:center;">
+        <img src="data:image/jpg;base64,{img_base64}" 
+             style="width:120px;height:120px;border-radius:50%;
+             object-fit:cover;border:3px solid #00FFFF;
+             box-shadow:0 0 20px #00FFFF;">
+        <h2 style="color:white;">Muthu AI</h2>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 DEFAULT_SYSTEM_PROMPT = (
-    "You are Jaguar AI, a helpful, concise personal assistant. "
+    "You are Muthu AI, a helpful, concise personal assistant. "
     "Answer clearly and directly."
 )
 
@@ -39,7 +146,7 @@ if "doc_text" not in st.session_state:
 # Sidebar - provider / model settings
 # ---------------------------------------------------------------------
 with st.sidebar:
-    st.title("🐆 Jaguar AI")
+    st.title(" Muthu AI")
     st.caption("Settings")
 
     provider = st.selectbox("LLM Provider", ["OpenAI", "Ollama (local)"])
@@ -104,7 +211,33 @@ with st.sidebar:
 # ---------------------------------------------------------------------
 # Main chat area
 # ---------------------------------------------------------------------
-st.title("Jaguar AI")
+now = datetime.now()
+current_time = now.strftime("%I:%M %p")   # 12-hour format
+current_date = now.strftime("%A, %d %B %Y")
+
+st.markdown(
+    f"""
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:5px 10px;
+        margin-bottom:5px;
+        background: rgba(255,255,255,0.08);
+        border-radius:10px;
+        font-size:14px;
+        color:#00FFFF;
+        box-shadow:0 0 10px rgba(0,255,255,0.2);
+    ">
+        <span>🗓️ {current_date}</span>
+        <span>⏰ {current_time}</span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
+st.title("Muthu AI")
 st.caption("Your personal AI assistant, now in the browser.")
 
 for msg in st.session_state.messages:
@@ -113,7 +246,10 @@ for msg in st.session_state.messages:
 
 # Handle a prompt queued by a sidebar button (e.g. "Summarize doc")
 queued_prompt = st.session_state.pop("pending_prompt", None)
-user_prompt = st.chat_input("Message Jaguar AI...")
+
+user_prompt = st.chat_input("Message Muthu AI...")
+
+
 
 prompt = queued_prompt or user_prompt
 
@@ -161,3 +297,6 @@ if prompt:
             placeholder.markdown(full_response)
 
     st.session_state.messages.append({"role": "assistant", "content": full_response})
+
+
+
