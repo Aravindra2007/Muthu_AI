@@ -18,7 +18,7 @@ from datetime import datetime
 # ---------------------------------------------------------------------
 st.set_page_config(
     page_title="Muthu AI",
-    page_icon="🐆",
+    page_icon="icon.png",
     layout="centered",
 )
 
